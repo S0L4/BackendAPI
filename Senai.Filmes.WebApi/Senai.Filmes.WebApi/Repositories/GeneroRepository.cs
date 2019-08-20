@@ -10,15 +10,49 @@ namespace Senai.Filmes.WebApi.Repositories
     public class GeneroRepository
     {
         private string StringConexao = "Data Source=.\\SqlExpress; Initial Catalog=T_Filmes; User=sa, Psw=132";
+        List<GeneroDomain> generos = new List<GeneroDomain>();
 
         public List<GeneroDomain> Listar()
         {
-            List<GeneroDomain> generos = new List<GeneroDomain>();
+            using (SqlConnection con = new SqlConnection(StringConexao))
+            {
+                con.Open();
+                SqlDataReader sdr;
+                string Query = "SELECT IdGenero, Nome FROM Generos";
+
+                using (SqlCommand cmd = new SqlCommand(Query, con))
+                {
+                    sdr = cmd.ExecuteReader();
+
+                    while (sdr.Read())
+                    {
+                        GeneroDomain genero = new GeneroDomain
+                        {
+                            IdGenero = Convert.ToInt32(sdr["IdGenero"]),
+                            Nome = sdr["Nome"].ToString()
+                        };
+                        generos.Add(genero);
+                    }
+                }
+            }
+            return generos;
+        }
+
+        public void Cadastrar(GeneroDomain generoDomain)
+        {
+            string Query = "INSERT INTO Generos (Nome) VALUES (@Nome)";
 
             using (SqlConnection con = new SqlConnection(StringConexao))
             {
-
+                using (SqlCommand cmd = new SqlCommand(Query, con))
+                {
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Nome", generoDomain.Nome);
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
+
+
     }
 }
