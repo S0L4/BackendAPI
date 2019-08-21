@@ -29,7 +29,7 @@ namespace Senai.Sstop.WebApi.Controllers
             return EstiloRepository.Listar();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")]   
         public IActionResult BuscarPorId(int id)
         {
             EstiloDomain estiloDomain = EstiloRepository.BuscarPorId(id);
