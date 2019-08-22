@@ -17,15 +17,29 @@ namespace Senai.Filmes.WebApi.Controllers
         GeneroRepository GeneroRepository = new GeneroRepository();
 
         [HttpGet]
-        public IEnumerable<GeneroDomain> ListarGeneros()
+        public IActionResult ListarGeneros()
         {
-            return GeneroRepository.Listar();
+            return Ok(GeneroRepository.Listar());
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult CadastrarGenero(GeneroDomain generoDomain)
         {
             GeneroRepository.Cadastrar(generoDomain);
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult AtualizarGenero(GeneroDomain generoDomain)
+        {
+            GeneroRepository.Atualizar(generoDomain);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletarGenero(int id)
+        {
+            GeneroRepository.Deletar(id);
             return Ok();
         }
     }

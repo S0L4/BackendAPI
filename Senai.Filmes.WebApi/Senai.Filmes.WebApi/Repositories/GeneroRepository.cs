@@ -9,7 +9,7 @@ namespace Senai.Filmes.WebApi.Repositories
 {
     public class GeneroRepository
     {
-        private string StringConexao = "Data Source=.\\SqlExpress; Initial Catalog=T_Filmes; User=sa, Psw=132";
+        private string StringConexao = "Data Source=.\\SqlExpress; Initial Catalog=T_Filmes; User Id=sa; Pwd=132";
         List<GeneroDomain> generos = new List<GeneroDomain>();
 
         public List<GeneroDomain> Listar()
@@ -53,6 +53,35 @@ namespace Senai.Filmes.WebApi.Repositories
             }
         }
 
+        public void Atualizar(GeneroDomain generoDomain)
+        {
+            string Query = "UPDATE Generos SET Nome = @Nome WHERE IdGenero = @Id";
 
+            using (SqlConnection con = new SqlConnection(StringConexao))
+            {
+                using (SqlCommand cmd = new SqlCommand(Query, con))
+                {
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Nome", generoDomain.Nome);
+                    cmd.Parameters.AddWithValue("@Id", generoDomain.IdGenero);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Deletar(int id)
+        {
+            string Query = "DELETE FROM Generos WHERE IdGenero = @Id";
+
+            using (SqlConnection con = new SqlConnection(StringConexao))
+            {
+                using (SqlCommand cmd = new SqlCommand(Query, con))
+                {
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
