@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Senai.Ekips.WebApi.Domains;
@@ -16,12 +19,22 @@ namespace Senai.Ekips.WebApi.Controllers
     {
         FuncionarioRepository FuncionarioRepository = new FuncionarioRepository();
 
+        [Authorize]
         [HttpGet]
         public IActionResult ListarFuncionarios()
         {
-            return Ok(FuncionarioRepository.Listar());
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            int id = Convert.ToInt32(identity.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value);
+            string role = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
+            
+            if (role == "Administrador")
+            {
+                return Ok(FuncionarioRepository.Listar());
+            }
+            return Ok(FuncionarioRepository.BuscarPorId(id));
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult CadastrarFuncionario(Funcionarios funcionario)
         {
@@ -36,7 +49,8 @@ namespace Senai.Ekips.WebApi.Controllers
 
             }
         }
-        
+
+        [Authorize]
         [HttpPut]
         public IActionResult AtualizarFuncionario(Funcionarios funcionario)
         {
@@ -58,6 +72,7 @@ namespace Senai.Ekips.WebApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeletarFuncionario(int id)
         {

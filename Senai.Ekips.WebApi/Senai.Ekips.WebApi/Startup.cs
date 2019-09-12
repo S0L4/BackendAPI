@@ -49,8 +49,8 @@ namespace Senai.Ekips.WebApi
                     // tempo de expiracao
                     ClockSkew = TimeSpan.FromMinutes(30),
                     // quem esta enviando
-                    ValidIssuer = "Ekpis.WebApi",
-                    ValidAudience = "Ekpis.WebApi"
+                    ValidIssuer = "Ekips.WebApi",
+                    ValidAudience = "Ekips.WebApi"
                 };
             });
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Senai.Ekips.WebApi.Domains;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace Senai.Ekips.WebApi.Repositories
         {
             using (EkipsContext ctx = new EkipsContext())
             {
-                return ctx.Funcionarios.Include(x => x.IdDepartamentoNavigation, x.IdCargoNavigation, x.IdUsuarioNavigation).ToList();
+                return ctx.Funcionarios.Include(x => x.IdDepartamentoNavigation).Include(y=> y.IdCargoNavigation).ToList();
+
             }
         }
 
@@ -41,7 +43,7 @@ namespace Senai.Ekips.WebApi.Repositories
             {
                 Funcionarios FuncionarioEncontrado = ctx.Funcionarios.FirstOrDefault(x => x.IdFuncionario == funcionario.IdFuncionario);
                 FuncionarioEncontrado.Nome = funcionario.Nome;
-                ctx.Funcionarios.Add(FuncionarioEncontrado);
+                ctx.Funcionarios.Update(FuncionarioEncontrado);
                 ctx.SaveChanges();
             }
         }
